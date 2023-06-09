@@ -8,11 +8,11 @@ using back_side_DataAccess.Data;
 
 #nullable disable
 
-namespace back_side_DataAccess.Migrations
+namespace _423_proj.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230609125537_TablesCreated")]
-    partial class TablesCreated
+    [Migration("20230609214741_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,6 +66,10 @@ namespace back_side_DataAccess.Migrations
 
                     b.HasKey("ApplicationID");
 
+                    b.HasIndex("PostID");
+
+                    b.HasIndex("UserID");
+
                     b.ToTable("Applications");
                 });
 
@@ -84,8 +88,8 @@ namespace back_side_DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PricePerPerson")
-                        .HasColumnType("int");
+                    b.Property<double>("PricePerPerson")
+                        .HasColumnType("float");
 
                     b.Property<int>("Quota")
                         .HasColumnType("int");
@@ -95,6 +99,8 @@ namespace back_side_DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PostID");
+
+                    b.HasIndex("AdvertisementID");
 
                     b.ToTable("Posts");
                 });
@@ -114,6 +120,10 @@ namespace back_side_DataAccess.Migrations
                     b.Property<int>("InstagramFollowerCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NameSurname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -132,18 +142,18 @@ namespace back_side_DataAccess.Migrations
                     b.Property<int>("TiktokFollowerCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserType")
+                    b.Property<int>("UserTypeID")
                         .HasColumnType("int");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("e_mail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserID");
+
+                    b.HasIndex("PostID");
+
+                    b.HasIndex("UserTypeID");
 
                     b.ToTable("Users");
                 });
@@ -163,6 +173,55 @@ namespace back_side_DataAccess.Migrations
                     b.HasKey("UserTypeID");
 
                     b.ToTable("UserTypes");
+                });
+
+            modelBuilder.Entity("back_side_Model.Models.Application", b =>
+                {
+                    b.HasOne("back_side_Model.Models.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("back_side_Model.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("back_side_Model.Models.Post", b =>
+                {
+                    b.HasOne("back_side_Model.Models.Advertisement", "Advertisement")
+                        .WithMany()
+                        .HasForeignKey("AdvertisementID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Advertisement");
+                });
+
+            modelBuilder.Entity("back_side_Model.Models.User", b =>
+                {
+                    b.HasOne("back_side_Model.Models.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("back_side_Model.Models.UserType", "UserType")
+                        .WithMany()
+                        .HasForeignKey("UserTypeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("UserType");
                 });
 #pragma warning restore 612, 618
         }

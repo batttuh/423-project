@@ -1,8 +1,8 @@
 using back_side_DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
+using YourNamespace.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -11,14 +11,22 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
+
+builder.Services.AddScoped<AuthController>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+ 
+ 
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseRouting();
+app.UseEndpoints(endpoints =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    endpoints.MapControllers();
+});
+
+
 
 app.UseHttpsRedirection();
 
