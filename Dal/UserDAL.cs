@@ -2,17 +2,20 @@ using System.Collections.Generic;
 using System.Linq;
 using back_side_DataAccess.Data;
 using back_side_Model.Models;
-using Microsoft.EntityFrameworkCore; // Make sure to add the Entity Framework NuGet package
-
-
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Cryptography;
+using System.Text;
 
 public class UserRepository : IUserRepository
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly IPasswordHasher<User> _passwordHasher;
 
-    public UserRepository(ApplicationDbContext dbContext)
+    public UserRepository(ApplicationDbContext dbContext, IPasswordHasher<User> passwordHasher)
     {
         _dbContext = dbContext;
+        _passwordHasher = passwordHasher;
     }
 
     public User GetUserByEmail(string email)
@@ -22,7 +25,9 @@ public class UserRepository : IUserRepository
 
     public void CreateUser(User user)
     {
-            Console.WriteLine("Registering user");
+        // Hash the password before saving
+        user.Password = HashPassword(user,user.Password);
+
         _dbContext.Set<User>().Add(user);
         _dbContext.SaveChanges();
     }
@@ -47,9 +52,18 @@ public class UserRepository : IUserRepository
     {
         return _dbContext.Set<User>().ToList();
     }
-    public Boolean VerifyPassword(string passwordRequest, string passwordUser){
-        //TODO implement this method
-        return false;
+
+    public bool VerifyPassword(User user,string passwordRequest, string passwordUser)
+    {
+        // Verify the password hash
+        var result = _passwordHasher.VerifyHashedPassword(user, passwordUser, passwordRequest);
+        return result == PasswordVerificationResult.Success;
     }
-  
+
+    private string HashPassword(User user,string password)
+    {
+        // Hash the password
+        var hashedPassword = _passwordHasher.HashPassword(user, password);
+        return hashedPassword;
+    }
 }

@@ -7,5 +7,5 @@ public interface IUserRepository
     void UpdateUser(User user);
     void DeleteUser(int userId);
     List<User> GetAllUsers();
-    Boolean VerifyPassword(string passwordRequest, string passwordUser);
+    Boolean VerifyPassword(User user,string passwordRequest, string passwordUser);
 }
