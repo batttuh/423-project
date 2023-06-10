@@ -7,7 +7,7 @@ using back_side_DataAccess.Data;
 
 #nullable disable
 
-namespace back_side_DataAccess.Migrations
+namespace _423_proj.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot

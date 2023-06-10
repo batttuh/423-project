@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace back_side_DataAccess.Migrations
+namespace _423_proj.Migrations
 {
     /// <inheritdoc />
-    public partial class TablesCreated : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,18 +26,16 @@ namespace back_side_DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Applications",
+                name: "UserTypes",
                 columns: table => new
                 {
-                    ApplicationID = table.Column<int>(type: "int", nullable: false)
+                    UserTypeID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserID = table.Column<int>(type: "int", nullable: false),
-                    PostID = table.Column<int>(type: "int", nullable: false),
-                    ShareURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserTypeName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Applications", x => x.ApplicationID);
+                    table.PrimaryKey("PK_UserTypes", x => x.UserTypeID);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,11 +48,17 @@ namespace back_side_DataAccess.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AdvertisementID = table.Column<int>(type: "int", nullable: false),
                     Quota = table.Column<int>(type: "int", nullable: false),
-                    PricePerPerson = table.Column<int>(type: "int", nullable: false)
+                    PricePerPerson = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Posts", x => x.PostID);
+                    table.ForeignKey(
+                        name: "FK_Posts_Advertisements_AdvertisementID",
+                        column: x => x.AdvertisementID,
+                        principalTable: "Advertisements",
+                        principalColumn: "AdvertisementID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -63,8 +67,8 @@ namespace back_side_DataAccess.Migrations
                 {
                     UserID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserType = table.Column<int>(type: "int", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserTypeID = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PostID = table.Column<int>(type: "int", nullable: false),
                     e_mail = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -77,39 +81,90 @@ namespace back_side_DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserID);
+                    table.ForeignKey(
+                        name: "FK_Users_Posts_PostID",
+                        column: x => x.PostID,
+                        principalTable: "Posts",
+                        principalColumn: "PostID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Users_UserTypes_UserTypeID",
+                        column: x => x.UserTypeID,
+                        principalTable: "UserTypes",
+                        principalColumn: "UserTypeID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserTypes",
+                name: "Applications",
                 columns: table => new
                 {
-                    UserTypeID = table.Column<int>(type: "int", nullable: false)
+                    ApplicationID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserTypeName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserID = table.Column<int>(type: "int", nullable: false),
+                    PostID = table.Column<int>(type: "int", nullable: false),
+                    ShareURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserTypes", x => x.UserTypeID);
+                    table.PrimaryKey("PK_Applications", x => x.ApplicationID);
+                    table.ForeignKey(
+                        name: "FK_Applications_Posts_PostID",
+                        column: x => x.PostID,
+                        principalTable: "Posts",
+                        principalColumn: "PostID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Applications_Users_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Applications_PostID",
+                table: "Applications",
+                column: "PostID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Applications_UserID",
+                table: "Applications",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_AdvertisementID",
+                table: "Posts",
+                column: "AdvertisementID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_PostID",
+                table: "Users",
+                column: "PostID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_UserTypeID",
+                table: "Users",
+                column: "UserTypeID");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Advertisements");
-
-            migrationBuilder.DropTable(
                 name: "Applications");
-
-            migrationBuilder.DropTable(
-                name: "Posts");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
+                name: "Posts");
+
+            migrationBuilder.DropTable(
                 name: "UserTypes");
+
+            migrationBuilder.DropTable(
+                name: "Advertisements");
         }
     }
 }
