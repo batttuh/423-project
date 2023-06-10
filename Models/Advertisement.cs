@@ -15,4 +15,10 @@ namespace back_side_Model.Models
         public int FollowerBottomLimit { get; set; }
         public int ViewsBottomLimit { get; set; }
     }
+     public class AdvertisementCreate
+    {
+        public int FollowerUpperLimit { get; set; }
+        public int FollowerBottomLimit { get; set; }
+        public int ViewsBottomLimit { get; set; }
+    }
 }
