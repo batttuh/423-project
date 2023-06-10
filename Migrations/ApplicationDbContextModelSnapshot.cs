@@ -7,7 +7,7 @@ using back_side_DataAccess.Data;
 
 #nullable disable
 
-namespace back_side_DataAccess.Migrations
+namespace _423_proj.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -113,9 +113,14 @@ namespace back_side_DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
                     b.HasKey("PostID");
 
                     b.HasIndex("AdvertisementID");
+
+                    b.HasIndex("UserID");
 
                     b.ToTable("Posts");
 
@@ -127,7 +132,8 @@ namespace back_side_DataAccess.Migrations
                             Description = "ExampleDescription",
                             PricePerPerson = 1.0,
                             Quota = 1,
-                            Title = "ExampleTitle"
+                            Title = "ExampleTitle",
+                            UserID = 1
                         });
                 });
 
@@ -157,9 +163,6 @@ namespace back_side_DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PostID")
-                        .HasColumnType("int");
-
                     b.Property<string>("TiktokAccount")
                         .HasColumnType("nvarchar(max)");
 
@@ -175,8 +178,6 @@ namespace back_side_DataAccess.Migrations
 
                     b.HasKey("UserID");
 
-                    b.HasIndex("PostID");
-
                     b.HasIndex("UserTypeID");
 
                     b.ToTable("Users");
@@ -189,7 +190,6 @@ namespace back_side_DataAccess.Migrations
                             Name = "metinabadan",
                             NameSurname = "Metin Abadan",
                             Password = "metinabadan06",
-                            PostID = 1,
                             TiktokFollowerCount = 0,
                             UserTypeID = 1,
                             e_mail = "metinabadan@gmail.com"
@@ -225,13 +225,13 @@ namespace back_side_DataAccess.Migrations
                     b.HasOne("back_side_Model.Models.Post", "Post")
                         .WithMany()
                         .HasForeignKey("PostID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .IsRequired();
 
                     b.HasOne("back_side_Model.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .IsRequired();
 
                     b.Navigation("Post");
@@ -247,24 +247,24 @@ namespace back_side_DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("back_side_Model.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Advertisement");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("back_side_Model.Models.User", b =>
                 {
-                    b.HasOne("back_side_Model.Models.Post", "Post")
-                        .WithMany()
-                        .HasForeignKey("PostID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("back_side_Model.Models.UserType", "UserType")
                         .WithMany()
                         .HasForeignKey("UserTypeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Post");
 
                     b.Navigation("UserType");
                 });
