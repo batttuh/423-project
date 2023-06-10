@@ -22,9 +22,6 @@ namespace back_side_Model.Models
         public string Name { get; set; }
         [Required]
         public string Password { get; set; }
-        [ForeignKey("Post")]
-        [Required]
-        public int PostID { get; set; }
         [Required]
         public string e_mail { get; set; }
         //public int photo { get; set; }
@@ -34,7 +31,6 @@ namespace back_side_Model.Models
         public string? InstagramAccount { get; set; }
         public int TiktokFollowerCount { get; set; }
         public int InstagramFollowerCount { get; set; }
-        public Post Post { get; set; }
         public UserType UserType { get; set; }
     }
     public class UserLogin{

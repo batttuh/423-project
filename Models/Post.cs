@@ -22,10 +22,14 @@ namespace back_side_Model.Models
         [ForeignKey("Advertisement")]
         public int AdvertisementID { get; set; }
         [Required]
+        [ForeignKey("User")]
+        public int UserID { get; set; }
+        [Required]
         public int Quota { get; set; }
         [Required]
         public double PricePerPerson { get; set; }
 
-        public Advertisement Advertisement { get; set; }
+        public Advertisement? Advertisement { get; set; }
+        public User User { get; set; }
     }
 }
