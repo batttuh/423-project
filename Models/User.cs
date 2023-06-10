@@ -28,9 +28,9 @@ namespace back_side_Model.Models
         public string e_mail { get; set; }
         //public int photo { get; set; }
         [Required]
-        public string NameSurname { get; set; }
-        public string TiktokAccount { get; set; }
-        public string InstagramAccount { get; set; }
+        public string? NameSurname { get; set; }
+        public string? TiktokAccount { get; set; }
+        public string? InstagramAccount { get; set; }
         public int TiktokFollowerCount { get; set; }
         public int InstagramFollowerCount { get; set; }
 
