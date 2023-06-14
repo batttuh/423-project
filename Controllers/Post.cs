@@ -40,6 +40,23 @@ namespace YourNamespace.Controllers
             return Ok(post);
         }
 
+        [HttpGet("dashboard")]
+        public async Task<IActionResult> GetUserPosts()
+        {
+            // fetch the user's email from the token 
+            var email = HttpContext.Items["email"];
+            if (email == null)
+            {
+                return Unauthorized();
+            }
+
+            // get all posts created by the user's email directly
+            var posts = await _postRepository.GetPostsByEmail(email.ToString());
+
+            return Ok(posts);
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> CreatePost(PostCreate request)
         {
