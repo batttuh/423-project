@@ -95,25 +95,26 @@ namespace YourNamespace.Controllers
             return Ok();
         }
 
-        [HttpPut("{postId}")]
-        public async Task<IActionResult> UpdatePost(int postId, Post post)
+        [HttpPut]
+        public async Task<IActionResult> UpdatePost(int postId,PostUpdate postUpdate)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (postId != post.PostID)
-            {
-                return BadRequest();
-            }
+            Post post = await _postRepository.GetPostById(postId);
+            post.Title = postUpdate.Title;
+            post.PricePerPerson = postUpdate.PricePerPerson;
+            post.Description = postUpdate.Description;
+            post.Quota= postUpdate.Quota;
 
             await _postRepository.UpdatePost(post);
 
             return Ok();
         }
 
-        [HttpDelete("{postId}")]
+        [HttpDelete]
         public async Task<IActionResult> DeletePost(int postId)
         {
             await _postRepository.DeletePost(postId);
