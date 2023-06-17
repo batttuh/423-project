@@ -4,6 +4,7 @@ using back_side_DataAccess.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using back_side_Model.DTO;
 
 namespace YourNamespace.Controllers
 {
@@ -84,7 +85,7 @@ namespace YourNamespace.Controllers
         }
 
 
-        [HttpPut]
+        [HttpPut("{commentId}")]
         public async Task<IActionResult> UpdateComment(int commentId, SaveComment commentUpdate)
         {
             if (!ModelState.IsValid)
@@ -134,11 +135,26 @@ namespace YourNamespace.Controllers
             }
            
             var allComments = await _commentRepository.GetAllCommentByPostID(postId);
+            var mappedComments = allComments.Select(c => new CommentDTO
+            {
+                CommentID = c.CommentID,
+                ShareURL = c.ShareURL,
+                User = new UserDTO(
+                      c.User.UserID,
+                     c.User.Name,
+                     c.User.e_mail,
+                     c.User.NameSurname,
+                     c.User.TiktokAccount,
+                     c.User.InstagramAccount,
+                      c.User.TiktokFollowerCount,
+                     c.User.InstagramFollowerCount
+                )
+            }).ToList();
             if (allComments == null)
             {
                 return NotFound();
             }
-            return Ok(allComments);
+            return Ok(mappedComments);
         }
 
         

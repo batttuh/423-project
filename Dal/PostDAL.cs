@@ -21,14 +21,8 @@ namespace back_side_DataAccess.Repositories
              foreach (var post in posts)
             {
                 post.Advertisement = await _context.Advertisements.FirstOrDefaultAsync(a => a.AdvertisementID == post.AdvertisementID);
-                post.User = await _context.Users.Where(a => a.UserID == post.UserID).Select(a => new User
-                {
-                    Name = a.Name,
-                    e_mail = a.e_mail,
-                    NameSurname = a.NameSurname,
-                    UserType = a.UserType
-                }).FirstOrDefaultAsync();
-
+                post.User = await _context.Users.Where(a => a.UserID == post.UserID).FirstOrDefaultAsync();
+                post.User.UserType = await _context.UserTypes.Where(a => a.UserTypeID == post.User.UserTypeID).FirstOrDefaultAsync();
             }
             return posts;
         }

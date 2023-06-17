@@ -39,19 +39,39 @@ namespace back_side_DataAccess.Repositories
 
         public async Task<List<Comment>> GetAllCommentByPostID(int postId)
         {
-            var post = await _context.Posts.FirstOrDefaultAsync(u => u.PostID == postId);
+            var post = await _context.Posts.Where(u => u.PostID == postId).Select(
+                u => new Post
+                {
+                    PostID = u.PostID,
+                    UserID = u.UserID,
+                    AdvertisementID = u.AdvertisementID,
+                    Title = u.Title,
+                    Description = u.Description,
+                    User = u.User,
+                    Advertisement = u.Advertisement
+                    
+                }).FirstOrDefaultAsync();
             if (post == null)
             {
                 throw new Exception("No such post.");
             }
 
-            var comments = await _context.Comment.Where(p => p.PostID == post.PostID).ToListAsync();
-            
+        var comments = await _context.Comment.Where(p => p.PostID == post.PostID).Select(p => new Comment
+            {
+                CommentID = p.CommentID,
+                ShareURL = p.ShareURL,
+                UserID = p.UserID,
+                PostID = p.PostID,
+                User = p.User,
+                Post = post                
+            }).ToListAsync();
             return comments;
         }
 
         public async Task<Comment> GetCommentByCommentID(int commentId)
         {
+
+
             var comments = await _context.Comment.FindAsync(commentId);
             return comments;
         }

@@ -4,6 +4,7 @@ using back_side_DataAccess.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using back_side_Model.DTO;
 
 namespace YourNamespace.Controllers
 {
@@ -26,7 +27,26 @@ namespace YourNamespace.Controllers
         public async Task<IActionResult> GetAllPosts()
         {
             var posts = await _postRepository.GetAllPosts();
-            return Ok(posts);
+            var mappedPosts=posts.Select(a=>new GetAllPostDTO{
+                PostID=a.PostID,
+                Title=a.Title,
+                Description=a.Description,
+                Quota=a.Quota,
+                PricePerPerson=a.PricePerPerson,
+                Advertisement=a.Advertisement,
+                User= new UserTypeWithDTO(
+                     a.User.UserID,
+                     a.User.Name,
+                        a.User.e_mail,
+                        a.User.NameSurname,
+                        a.User.TiktokAccount,
+                        a.User.InstagramAccount,
+                        a.User.TiktokFollowerCount,
+                        a.User.InstagramFollowerCount,
+                        a.User.UserType
+                )
+            }).ToList();
+            return Ok(mappedPosts);
         }
 
         [HttpGet("{postId}")]
@@ -52,9 +72,16 @@ namespace YourNamespace.Controllers
 
             // get all posts created by the user's email directly
             var posts = await _postRepository.GetPostsByEmail(email.ToString());
-
+            var mappedPost=posts.Select(a=>new PostDTODashboard{
+                PostID=a.PostID,
+                Title=a.Title,
+                Description=a.Description,
+                Quota=a.Quota,
+                PricePerPerson=a.PricePerPerson,
+                Advertisement=a.Advertisement
+            }).ToList();
             return Ok(
-               posts
+               mappedPost
             );
         }
 
@@ -97,7 +124,7 @@ namespace YourNamespace.Controllers
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPut("{postId}")]
         public async Task<IActionResult> UpdatePost(int postId,PostUpdate postUpdate)
         {
             if (!ModelState.IsValid)
@@ -116,7 +143,7 @@ namespace YourNamespace.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("{postId}")]
         public async Task<IActionResult> DeletePost(int postId)
         {
             await _postRepository.DeletePost(postId);
