@@ -42,5 +42,13 @@ namespace back_side_Model.Models
 
         public AdvertisementCreate? AdvertisementCreate { get; set; }
     }
+
+    public class PostUpdate
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public int Quota { get; set; }
+        public double PricePerPerson { get; set; }
+    }
 }
 

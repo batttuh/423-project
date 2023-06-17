@@ -46,5 +46,19 @@ namespace back_side_DataAccess.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<Post>> GetPostsByEmail(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.e_mail == email);
+            if (user == null)
+            {
+                throw new Exception("No such user.");
+            }
+
+            var posts = await _context.Posts.Where(p => p.UserID == user.UserID).ToListAsync();
+            return posts;
+        }
+
+
     }
 }
