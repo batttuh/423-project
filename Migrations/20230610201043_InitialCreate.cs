@@ -120,7 +120,7 @@ namespace _423_proj.Migrations
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Restrict);
-                });
+                });            
 
             migrationBuilder.InsertData(
                 table: "Advertisements",
@@ -189,7 +189,7 @@ namespace _423_proj.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "UserTypes");
+                name: "UserTypes");            
         }
     }
 }

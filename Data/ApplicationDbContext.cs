@@ -19,6 +19,7 @@ namespace back_side_DataAccess.Data
         public DbSet<UserType> UserTypes { get; set; }
         public DbSet<Advertisement> Advertisements { get; set; }
         public DbSet<Application> Applications { get; set; }
+        public DbSet<Comment> Comment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,6 +61,16 @@ namespace back_side_DataAccess.Data
                     PostID = 1,
                     ShareURL = "URL"
                 });
+            modelBuilder.Entity<Comment>().HasData(
+                new Comment()
+                {
+                    CommentID = 1,
+                    UserID = 1,
+                    PostID = 1,
+                    Description = "ExampleDescription123"
+
+                });
+
         }
 
     }
