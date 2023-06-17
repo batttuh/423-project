@@ -45,21 +45,8 @@ namespace back_side_DataAccess.Repositories
                 throw new Exception("No such post.");
             }
 
-            var comments = await _context.Comment.Where(p => p.PostID == post.PostID).Select(p => new Comment
-            {
-                CommentID = p.CommentID,
-                ShareURL = p.ShareURL,
-                UserID = p.UserID,
-                PostID = p.PostID,
-                User = p.User,
-                Post = p.Post
-            }).ToListAsync();
-            comments.ForEach(p => {
-            p.User.Password = null;
-            p.User.UserType = null;
-            p.Post.User.Password = null;
-                    }          
-              );
+            var comments = await _context.Comment.Where(p => p.PostID == post.PostID).ToListAsync();
+            
             return comments;
         }
 

@@ -115,7 +115,7 @@ namespace YourNamespace.Controllers
             return Ok();
         }
         
-          [HttpGet("getAll/{postID}")]
+          [HttpGet("getAllComment/{postID}")]
         public async Task<IActionResult> GetCommentByPostID(int postId)
         {
               if (HttpContext.Items["email"] == null)
@@ -124,7 +124,7 @@ namespace YourNamespace.Controllers
             }
             string email = HttpContext.Items["email"]!.ToString()!;
 
-            if (_userRepository.GetUserByEmail(email) == null)
+            if (await _userRepository.GetUserByEmail(email) == null)
             {
                 return BadRequest();
             }
