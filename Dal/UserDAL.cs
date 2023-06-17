@@ -18,9 +18,9 @@ public class UserRepository : IUserRepository
         _passwordHasher = passwordHasher;
     }
 
-    public User GetUserByEmail(string email)
+    public async Task<User> GetUserByEmail(string email)
     {
-        return _dbContext.Set<User>().FirstOrDefault(u => u.e_mail == email);
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.e_mail == email);
     }
 
     public void CreateUser(User user)

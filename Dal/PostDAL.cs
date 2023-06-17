@@ -17,7 +17,20 @@ namespace back_side_DataAccess.Repositories
 
         public async Task<List<Post>> GetAllPosts()
         {
-            return await _context.Posts.ToListAsync();
+            var posts= await _context.Posts.ToListAsync<Post>();
+             foreach (var post in posts)
+            {
+                post.Advertisement = await _context.Advertisements.FirstOrDefaultAsync(a => a.AdvertisementID == post.AdvertisementID);
+                post.User = await _context.Users.Where(a => a.UserID == post.UserID).Select(a => new User
+                {
+                    Name = a.Name,
+                    e_mail = a.e_mail,
+                    NameSurname = a.NameSurname,
+                    UserType = a.UserType
+                }).FirstOrDefaultAsync();
+
+            }
+            return posts;
         }
 
         public async Task<Post> GetPostById(int postId)
@@ -49,13 +62,17 @@ namespace back_side_DataAccess.Repositories
 
         public async Task<List<Post>> GetPostsByEmail(string email)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.e_mail == email);
+           var user = await _context.Users.FirstOrDefaultAsync(u => u.e_mail == email);
             if (user == null)
             {
                 throw new Exception("No such user.");
             }
 
             var posts = await _context.Posts.Where(p => p.UserID == user.UserID).ToListAsync();
+            foreach (var post in posts)
+            {
+                post.Advertisement = await _context.Advertisements.FirstOrDefaultAsync(a => a.AdvertisementID == post.AdvertisementID);
+            }
             return posts;
         }
 

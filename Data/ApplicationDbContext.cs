@@ -18,7 +18,6 @@ namespace back_side_DataAccess.Data
         public DbSet<User> Users { get; set; }
         public DbSet<UserType> UserTypes { get; set; }
         public DbSet<Advertisement> Advertisements { get; set; }
-        public DbSet<Application> Applications { get; set; }
         public DbSet<Comment> Comment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -53,21 +52,13 @@ namespace back_side_DataAccess.Data
                 {
                     AdvertisementID = 1,
                 });
-            modelBuilder.Entity<Application>().HasData(
-                new Application()
-                {
-                    ApplicationID = 1,
-                    UserID = 1,
-                    PostID = 1,
-                    ShareURL = "URL"
-                });
             modelBuilder.Entity<Comment>().HasData(
                 new Comment()
                 {
                     CommentID = 1,
                     UserID = 1,
                     PostID = 1,
-                    Description = "ExampleDescription123"
+                    ShareURL = "ExampleDescription123"
 
                 });
 

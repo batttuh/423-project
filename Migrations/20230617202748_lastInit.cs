@@ -5,7 +5,7 @@
 namespace _423_proj.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class lastInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,7 +62,7 @@ namespace _423_proj.Migrations
                         column: x => x.UserTypeID,
                         principalTable: "UserTypes",
                         principalColumn: "UserTypeID",
-                        onDelete: ReferentialAction.Restrict); 
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -96,31 +96,31 @@ namespace _423_proj.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Applications",
+                name: "Comment",
                 columns: table => new
                 {
-                    ApplicationID = table.Column<int>(type: "int", nullable: false)
+                    CommentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ShareURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserID = table.Column<int>(type: "int", nullable: false),
-                    PostID = table.Column<int>(type: "int", nullable: false),
-                    ShareURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PostID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Applications", x => x.ApplicationID);
+                    table.PrimaryKey("PK_Comment", x => x.CommentID);
                     table.ForeignKey(
-                        name: "FK_Applications_Posts_PostID",
+                        name: "FK_Comment_Posts_PostID",
                         column: x => x.PostID,
                         principalTable: "Posts",
                         principalColumn: "PostID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Applications_Users_UserID",
+                        name: "FK_Comment_Users_UserID",
                         column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Restrict);
-                });            
+                });
 
             migrationBuilder.InsertData(
                 table: "Advertisements",
@@ -143,18 +143,18 @@ namespace _423_proj.Migrations
                 values: new object[] { 1, 1, "ExampleDescription", 1.0, 1, "ExampleTitle", 1 });
 
             migrationBuilder.InsertData(
-                table: "Applications",
-                columns: new[] { "ApplicationID", "PostID", "ShareURL", "UserID" },
-                values: new object[] { 1, 1, "URL", 1 });
+                table: "Comment",
+                columns: new[] { "CommentID", "PostID", "ShareURL", "UserID" },
+                values: new object[] { 1, 1, "ExampleDescription123", 1 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Applications_PostID",
-                table: "Applications",
+                name: "IX_Comment_PostID",
+                table: "Comment",
                 column: "PostID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Applications_UserID",
-                table: "Applications",
+                name: "IX_Comment_UserID",
+                table: "Comment",
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
@@ -177,7 +177,7 @@ namespace _423_proj.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Applications");
+                name: "Comment");
 
             migrationBuilder.DropTable(
                 name: "Posts");
@@ -189,7 +189,7 @@ namespace _423_proj.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "UserTypes");            
+                name: "UserTypes");
         }
     }
 }

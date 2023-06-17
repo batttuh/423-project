@@ -74,7 +74,7 @@ namespace YourNamespace.Controllers
         }
 
         // Check if the user exists
-        var user = _userRepository.GetUserByEmail(request.e_mail);
+        var user = await _userRepository.GetUserByEmail(request.e_mail);
         if (user == null)
         {
             ModelState.AddModelError("Username", "Invalid username or password.");

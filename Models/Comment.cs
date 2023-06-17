@@ -16,10 +16,11 @@ namespace back_side_Model.Models
 		public int CommentID { get; set; }
 		
 		[Required]
-		public string Description { get; set; }
+		public string ShareURL { get; set; }
 		
 		[Required]
 		[ForeignKey("User")]
+		
 		public int UserID { get; set; }
 
 		[Required]
@@ -32,7 +33,7 @@ namespace back_side_Model.Models
 	public class SaveComment
 	{		
 		public int PostID { get; set; }
-		public string Description { get; set; }
+		public string ShareURL { get; set; }
 		
 	}
 

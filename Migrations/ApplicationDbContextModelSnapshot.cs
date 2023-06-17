@@ -16,7 +16,7 @@ namespace _423_proj.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -52,13 +52,13 @@ namespace _423_proj.Migrations
                         });
                 });
 
-            modelBuilder.Entity("back_side_Model.Models.Application", b =>
+            modelBuilder.Entity("back_side_Model.Models.Comment", b =>
                 {
-                    b.Property<int>("ApplicationID")
+                    b.Property<int>("CommentID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApplicationID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentID"));
 
                     b.Property<int>("PostID")
                         .HasColumnType("int");
@@ -70,20 +70,20 @@ namespace _423_proj.Migrations
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
-                    b.HasKey("ApplicationID");
+                    b.HasKey("CommentID");
 
                     b.HasIndex("PostID");
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Applications");
+                    b.ToTable("Comment");
 
                     b.HasData(
                         new
                         {
-                            ApplicationID = 1,
+                            CommentID = 1,
                             PostID = 1,
-                            ShareURL = "URL",
+                            ShareURL = "ExampleDescription123",
                             UserID = 1
                         });
                 });
@@ -220,7 +220,7 @@ namespace _423_proj.Migrations
                         });
                 });
 
-            modelBuilder.Entity("back_side_Model.Models.Application", b =>
+            modelBuilder.Entity("back_side_Model.Models.Comment", b =>
                 {
                     b.HasOne("back_side_Model.Models.Post", "Post")
                         .WithMany()

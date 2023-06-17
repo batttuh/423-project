@@ -53,7 +53,9 @@ namespace YourNamespace.Controllers
             // get all posts created by the user's email directly
             var posts = await _postRepository.GetPostsByEmail(email.ToString());
 
-            return Ok(posts);
+            return Ok(
+               posts
+            );
         }
 
 
@@ -79,7 +81,7 @@ namespace YourNamespace.Controllers
             };
             await _advertisementRepository.CreateAdvertisement(advertisement);
             
-            User user= _userRepository.GetUserByEmail(email);
+            User user= await _userRepository.GetUserByEmail(email);
             var post=new Post{
                 Title=request.Title,
                 Description=request.Description,

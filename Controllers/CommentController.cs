@@ -66,12 +66,12 @@ namespace YourNamespace.Controllers
             }
            
 
-            User user = _userRepository.GetUserByEmail(email);
+            User user = await _userRepository.GetUserByEmail(email);
             Post post = await _postRepository.GetPostById(request.PostID); 
             var comment = new Comment
             {
                 
-                Description = request.Description,
+                ShareURL = request.ShareURL,
                 UserID = user.UserID,                
                 User = user,
                 PostID = request.PostID,
@@ -82,6 +82,7 @@ namespace YourNamespace.Controllers
 
             return Ok();
         }
+
 
         [HttpPut]
         public async Task<IActionResult> UpdateComment(int commentId, SaveComment commentUpdate)
@@ -99,7 +100,7 @@ namespace YourNamespace.Controllers
             }
 
 
-            comment.Description = commentUpdate.Description;
+            comment.ShareURL = commentUpdate.ShareURL;
             
 
             await _commentRepository.UpdateComment(comment);
@@ -113,6 +114,34 @@ namespace YourNamespace.Controllers
             await _commentRepository.DeleteComment(commentId);
             return Ok();
         }
+        
+          [HttpGet("getAll/{postID}")]
+        public async Task<IActionResult> GetCommentByPostID(int postId)
+        {
+              if (HttpContext.Items["email"] == null)
+            {
+                return BadRequest();
+            }
+            string email = HttpContext.Items["email"]!.ToString()!;
+
+            if (_userRepository.GetUserByEmail(email) == null)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+           
+            var allComments = await _commentRepository.GetAllCommentByPostID(postId);
+            if (allComments == null)
+            {
+                return NotFound();
+            }
+            return Ok(allComments);
+        }
+
+        
 
     }
 }
