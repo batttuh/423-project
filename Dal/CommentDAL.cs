@@ -52,8 +52,6 @@ namespace back_side_DataAccess.Repositories
 
         public async Task<Comment> GetCommentByCommentID(int commentId)
         {
-
-
             var comments = await _context.Comment.FindAsync(commentId);
             return comments;
         }

@@ -28,8 +28,6 @@ namespace YourNamespace.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegister request)
         {
-            Console.WriteLine("Registering user");
-            Console.WriteLine("Registering user");
             
               if (!ModelState.IsValid)
         {
@@ -37,7 +35,7 @@ namespace YourNamespace.Controllers
         }
 
         // Check if the username is already taken
-        if (_userRepository.GetUserByEmail(request.e_mail) != null)
+        if (await _userRepository.GetUserByEmail(request.e_mail) != null)
         {
             ModelState.AddModelError("Username", "Username is already taken.");
             return BadRequest(ModelState);

@@ -56,7 +56,7 @@ namespace YourNamespace.Controllers
             }
             string email = HttpContext.Items["email"]!.ToString()!;
 
-            if (_userRepository.GetUserByEmail(email) == null)
+            if (await _userRepository.GetUserByEmail(email) == null)
             {
                 return BadRequest();
             }

@@ -69,10 +69,12 @@ namespace back_side_DataAccess.Repositories
             }
 
             var posts = await _context.Posts.Where(p => p.UserID == user.UserID).ToListAsync();
+            
             foreach (var post in posts)
             {
                 post.Advertisement = await _context.Advertisements.FirstOrDefaultAsync(a => a.AdvertisementID == post.AdvertisementID);
             }
+            
             return posts;
         }
 
