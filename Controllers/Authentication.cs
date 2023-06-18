@@ -58,8 +58,9 @@ namespace YourNamespace.Controllers
         // Save the user to the database
         _userRepository.CreateUser(user);
 
-        return Ok();
-           
+            return Ok(new { message = "Successfully registered!" });
+
+
         }
 
         [HttpPost("login")]
