@@ -15,12 +15,14 @@ namespace YourNamespace.Controllers
         private readonly IPostRepository _postRepository;
         private readonly IAdvertisementRepository _advertisementRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ICommentRepository _commentRepository;
 
-        public PostController(IPostRepository postRepository,IAdvertisementRepository advertisementRepository,IUserRepository userRepository)
+        public PostController(IPostRepository postRepository,IAdvertisementRepository advertisementRepository,IUserRepository userRepository, ICommentRepository commentRepository)
         {
             _postRepository = postRepository;
             _advertisementRepository = advertisementRepository;
             _userRepository = userRepository;
+            _commentRepository = commentRepository;
         }
 
         [HttpGet]
@@ -183,6 +185,12 @@ namespace YourNamespace.Controllers
             }
             if(!post.User.e_mail.Equals(email)){
                 return BadRequest("You are not authorized to delete this post.");
+            }
+
+            var comments = await _commentRepository.GetAllCommentByPostID(postId);
+            foreach (var comment in comments)
+            {
+                await _commentRepository.DeleteComment(comment.CommentID);
             }
 
             await _postRepository.DeletePost(postId);
