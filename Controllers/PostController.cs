@@ -127,12 +127,28 @@ namespace YourNamespace.Controllers
         [HttpPut("{postId}")]
         public async Task<IActionResult> UpdatePost(int postId,PostUpdate postUpdate)
         {
+               if (HttpContext.Items["email"] == null)
+            {
+                return BadRequest();
+            }
+            string email = HttpContext.Items["email"]!.ToString()!;
+
+            if (await _userRepository.GetUserByEmail(email) == null)
+            {
+                return BadRequest();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             Post post = await _postRepository.GetPostById(postId);
+            if(post==null){
+                return BadRequest();
+            }
+            if(!post.User.e_mail.Equals(email)){
+                return BadRequest("You are not authorized to update this post.");
+            }
             post.Title = postUpdate.Title;
             post.PricePerPerson = postUpdate.PricePerPerson;
             post.Description = postUpdate.Description;
@@ -146,6 +162,29 @@ namespace YourNamespace.Controllers
         [HttpDelete("{postId}")]
         public async Task<IActionResult> DeletePost(int postId)
         {
+                if (HttpContext.Items["email"] == null)
+            {
+                return BadRequest();
+            }
+            string email = HttpContext.Items["email"]!.ToString()!;
+
+            if (await _userRepository.GetUserByEmail(email) == null)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Post post = await _postRepository.GetPostById(postId);
+            if(post==null){
+                return BadRequest();
+            }
+            if(!post.User.e_mail.Equals(email)){
+                return BadRequest("You are not authorized to delete this post.");
+            }
+
             await _postRepository.DeletePost(postId);
 
             return Ok();
