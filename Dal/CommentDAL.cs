@@ -17,9 +17,16 @@ namespace back_side_DataAccess.Repositories
 
         public async Task CreateComment(Comment comment)
         {
-            _context.Comment.Add(comment);
-            await _context.SaveChangesAsync();
-        }
+            try
+            {
+                _context.Comment.Add(comment);
+                await _context.SaveChangesAsync();
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+          }
 
         public async Task UpdateComment(Comment comment)
         {
@@ -72,7 +79,16 @@ namespace back_side_DataAccess.Repositories
         {
 
 
-            var comments = await _context.Comment.FindAsync(commentId);
+            var comments = await _context.Comment.Where(p => p.CommentID == commentId).Select(p => new Comment
+            {
+                CommentID = p.CommentID,
+                ShareURL = p.ShareURL,
+                UserID = p.UserID,
+                PostID = p.PostID,
+                User = p.User,
+                Post = p.Post
+            }).FirstOrDefaultAsync();
+            
             return comments;
         }
 

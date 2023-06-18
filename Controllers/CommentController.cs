@@ -68,16 +68,18 @@ namespace YourNamespace.Controllers
            
 
             User user = await _userRepository.GetUserByEmail(email);
-            Post post = await _postRepository.GetPostById(request.PostID); 
+        
+                var post = await _postRepository.GetPostById(request.PostID);
+        
+            if (post == null)         
+            {
+                return NotFound("Post not found.");
+            }
             var comment = new Comment
             {
-                
                 ShareURL = request.ShareURL,
                 UserID = user.UserID,                
-                User = user,
-                PostID = request.PostID,
-                Post = post
-                
+                PostID = request.PostID,                
             };
             await _commentRepository.CreateComment(comment);
 
@@ -88,6 +90,16 @@ namespace YourNamespace.Controllers
         [HttpPut("{commentId}")]
         public async Task<IActionResult> UpdateComment(int commentId, SaveComment commentUpdate)
         {
+              if (HttpContext.Items["email"] == null)
+            {
+                return BadRequest();
+            }
+            string email = HttpContext.Items["email"]!.ToString()!;
+
+            if (await _userRepository.GetUserByEmail(email) == null)
+            {
+                return BadRequest();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -100,7 +112,10 @@ namespace YourNamespace.Controllers
                 return NotFound("Comment not found.");
             }
 
-
+            if(!comment.User.e_mail.Equals(email))
+            {
+                return BadRequest("You are not authorized to update this comment.");
+            }
             comment.ShareURL = commentUpdate.ShareURL;
             
 
@@ -112,6 +127,30 @@ namespace YourNamespace.Controllers
         [HttpDelete("{commentId}")]
         public async Task<IActionResult> DeleteComment(int commentId)
         {
+              if (HttpContext.Items["email"] == null)
+            {
+                return BadRequest();
+            }
+            string email = HttpContext.Items["email"]!.ToString()!;
+
+            if (await _userRepository.GetUserByEmail(email) == null)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var comment = await _commentRepository.GetCommentByCommentID(commentId);
+              if (comment == null)
+            {
+                return NotFound("Comment not found.");
+            }
+     
+            if(!comment.User.e_mail.Equals(email))
+            {
+                return BadRequest("You are not authorized to delete this comment.");
+            }
             await _commentRepository.DeleteComment(commentId);
             return Ok();
         }

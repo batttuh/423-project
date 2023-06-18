@@ -29,7 +29,20 @@ namespace back_side_DataAccess.Repositories
 
         public async Task<Post> GetPostById(int postId)
         {
-            return await _context.Posts.FindAsync(postId);
+            Post? post=await _context.Posts.Where(x=>x.PostID==postId).Select(
+                x=>new Post{
+                    PostID=x.PostID,
+                    UserID=x.UserID,
+                    AdvertisementID=x.AdvertisementID,
+                    Title=x.Title,
+                    Description=x.Description,
+                    Quota=x.Quota,
+                    PricePerPerson=x.PricePerPerson,
+                    User=x.User,
+                    Advertisement=x.Advertisement
+                }
+            ).FirstOrDefaultAsync();
+            return post;
         }
 
         public async Task CreatePost(Post post)
